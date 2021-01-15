@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import GlobalStyles from "./GlobalStyles";
@@ -9,12 +9,28 @@ import useInterval from "../hooks/use-interval.hook";
 
 function App(props) {
   const { numCookies, setNumCookies, 
-          purchasedItems, setPurchasedItems,
+          purchasedItems,
           calculateCookiesPerSecond} = useContext(GameContext);
 
   useInterval(() => {
     setNumCookies(numCookies + calculateCookiesPerSecond(purchasedItems));
-  }, 1000);        
+  }, 1000);     
+  
+  useEffect(()=>{
+    let currentTime = (new Date()).getTime();
+    if(localStorage.getItem("lastTime")){
+      setNumCookies(numCookies + localStorage.getItem("lastCookiePerSec")
+      *Math.round((currentTime - localStorage.getItem("lastTime"))/1000) );
+    }
+
+  },[]);
+
+  useEffect(()=>{
+    return ()=>{
+      localStorage.setItem("lastTime",(new Date()).getTime());
+      localStorage.setItem("lastCookiePerSec", calculateCookiesPerSecond(purchasedItems));
+    };
+  });
 
   return (
     <>
