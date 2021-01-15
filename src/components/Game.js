@@ -8,8 +8,6 @@ import cookieSrc from "../cookie.svg";
 import Item from "./Item";
 import items from "../data";
 
-
-
 const Game = ({numCookies, setNumCookies, purchasedItems, 
   setPurchasedItems, calculateCookiesPerSecond}) => {
 
